@@ -3,7 +3,7 @@
         <todo-input :addNewTodo='addNewTodo' />
         <div class="filter-container">
             <todo-filters @change="onFilterChange" />
-            <todo-search />
+            <todo-search v-model="searchValue" />
         </div>
         <div class="todos-container" v-if="todos.length">
             <todo v-for="todo in getTodos" :key="todo.id" :todo='todo' :toogleTodoCheck='toogleTodoCheck' />
@@ -25,6 +25,7 @@ export default {
             todos: [],
             filteredTodos: [],
             filter: 'all',
+            searchValue: '',
         };
     },
     components: {
@@ -35,6 +36,7 @@ export default {
     },
     computed: {
         getTodos() {
+            console.log(this.searchValue);
             switch (this.filter) {
                 case 'all':
                     this.filteredTodos = this.todos;
@@ -44,6 +46,10 @@ export default {
                     break;
                 default:
                     break;
+            }
+
+            if(this.searchValue.length) {
+                this.filteredTodos = this.filteredTodos.filter(todo => todo.value.toLowerCase().includes(this.searchValue));
             }
             return this.filteredTodos;
         }
